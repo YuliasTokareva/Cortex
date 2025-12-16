@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Мои учебные цели</h2>
+    <a href="{% url 'dashboard:goal_create' %}" class="btn btn-success">+ Новая цель</a>
+</div>
+
+{% if goals %}
+    {% for goal in goals %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ goal.title }}</h5>
+                <p class="card-text">{{ goal.description|default:"Без описания" }}</p>
+                <small class="text-muted">Создано: {{ goal.created_at|date:"d.m.Y H:i" }}</small>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-info">
+        У вас пока нет целей. <a href="{% url 'dashboard:goal_create' %}">Создать первую?</a>
+    </div>
+{% endif %}
+{% endblock %}

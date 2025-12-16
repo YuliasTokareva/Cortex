@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="mb-4">Cortex — Твой умный помощник</h1>
+    <p class="lead">Отслеживайте цели, курсы и навыки в одном месте.</p>
+    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <a href="{% url 'dashboard:goal_list' %}" class="btn btn-outline-secondary btn-lg px-4">Мои цели</a>
+        <a href="/accounts/login/" class="btn btn-outline-secondary btn-lg px-4">Вход</a>
+    </div>
+</div>
+{% endblock %}
