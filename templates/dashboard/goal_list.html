@@ -12,6 +12,10 @@
                 <h5 class="card-title">{{ goal.title }}</h5>
                 <p class="card-text">{{ goal.description|default:"Без описания" }}</p>
                 <small class="text-muted">Создано: {{ goal.created_at|date:"d.m.Y H:i" }}</small>
+                <div class="mt-2">
+                    <a href="{% url 'dashboard:goal_update' goal.pk %}" class="btn btn-sm btn-outline-primary">Изменить</a>
+                    <a href="{% url 'dashboard:goal_delete' goal.pk %}" class="btn btn-sm btn-outline-danger">Удалить</a>
+                </div>
             </div>
         </div>
     {% endfor %}
