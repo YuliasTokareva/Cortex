@@ -7,6 +7,9 @@ from django.db.models import Q
 from .models import Goal, Note, Deadline
 from .forms import GoalForm, NoteForm, DeadlineForm
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+from .telegram_bot import run_telegram_bot
+
 
 # Цели Юля
 @login_required
@@ -137,3 +140,10 @@ class DeadlineDeleteView(LoginRequiredMixin, DeleteView):
     model = Deadline
     template_name = 'dashboard/deadline_confirm_delete.html'
     success_url = reverse_lazy('dashboard:deadline_list')
+
+
+
+def start_telegram_bot(request):
+    app = run_telegram_bot()
+    app.run_polling(drop_pending_updates=True)
+    return JsonResponse({"status": "bot started"})
