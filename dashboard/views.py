@@ -31,12 +31,16 @@ def goal_list(request):
 @login_required
 def goal_create(request):
     if request.method == 'POST':
+        print("POST data:", request.POST)
         form = GoalForm(request.POST)
         if form.is_valid():
+            print("Form is valid!")
             goal = form.save(commit=False)
             goal.user = request.user
             goal.save()
             return redirect('dashboard:goal_list')
+        else:
+            print("Form errors:", form.errors)
     else:
         form = GoalForm()
     return render(request, 'dashboard/goal_form.html', {'form': form})
