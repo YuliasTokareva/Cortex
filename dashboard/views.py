@@ -6,13 +6,23 @@ from django.urls import reverse_lazy
 from django.db.models import Q
 from .models import Goal, Note, Deadline
 from .forms import GoalForm, NoteForm, DeadlineForm
-
+from django.core.paginator import Paginator
 
 # Цели Юля
 @login_required
 def goal_list(request):
-    goals = Goal.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'dashboard/goal_list.html', {'goals': goals})
+    query = request.GET.get('q')
+    if query:
+        goals = Goal.objects.filter(title__icontains=query, user=request.user)
+    else:
+        goals = Goal.objects.filter(user=request.user)
+    goals = goals.order_by('-created_at')
+
+    paginator = Paginator(goals, 5)  # 5 целей на страницу
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'dashboard/goal_list.html', {'page_obj': page_obj, 'query': query})
 
 
 @login_required
