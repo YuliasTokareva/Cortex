@@ -1,6 +1,6 @@
 from django import forms
 from django.utils import timezone
-from .models import Note, Deadline
+from .models import Note, Deadline, Goal
 
 
 class NoteForm(forms.ModelForm):
@@ -15,7 +15,7 @@ class NoteForm(forms.ModelForm):
             'content': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 5,
-                'placeholder': 'Введите текст заметки...',
+                'placeholder': 'Введите текст заметки',
             }),
         }
         labels = {
@@ -49,7 +49,6 @@ class DeadlineForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Поддержка ввода даты в формате datetime-local
         self.fields['due_date'].input_formats = ['%Y-%m-%dT%H:%M']
 
     def clean_due_date(self):
@@ -57,3 +56,13 @@ class DeadlineForm(forms.ModelForm):
         if due_date and due_date < timezone.now():
             raise forms.ValidationError('Дата дедлайна не может быть в прошлом.')
         return due_date
+
+
+class GoalForm(forms.ModelForm):
+    class Meta:
+        model = Goal
+        fields = ["title", "description"]
+        widgets = {
+            "title": forms.TextInput(attrs={"class": "form-control"}),
+            "description": forms.Textarea(attrs={"class": "form-control", "rows": "3"}),
+        }

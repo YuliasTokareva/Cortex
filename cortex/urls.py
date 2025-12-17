@@ -22,6 +22,6 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),  # регистрация, вход, смена/сброс пароля
-    path('', TemplateView.as_view(template_name='dashboard/dashboard.html'), name='dashboard'),
-    path('', include('dashboard.urls')),  # здесь твои маршруты: /notes/, /deadlines/ и т.д.
+    path('', TemplateView.as_view(template_name='dashboard/dashboard.html'), name='dashboard'),  # главная страница
+    path('', include('dashboard.urls', namespace='dashboard')),  # пространство имён для целей, курсов, заметок, дедлайнов
 ]
