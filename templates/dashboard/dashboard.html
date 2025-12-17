@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 70vh;">
+  <h1 class="mb-4">🎓 Cortex — Учебный трекер</h1>
+  <p class="text-muted mb-4">Организуй свои заметки и дедлайны в одном месте</p>
+
+  <div class="d-grid gap-3" style="width: 300px;">
+    <a href="{% url 'dashboard:note_list' %}" class="btn btn-warning btn-lg">Мои заметки</a>
+    <a href="{% url 'dashboard:deadline_list' %}" class="btn btn-danger btn-lg">Мои дедлайны</a>
+  </div>
+</div>
+{% endblock %}
