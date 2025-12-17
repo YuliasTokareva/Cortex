@@ -14,13 +14,14 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.views.generic import TemplateView
+
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', TemplateView.as_view(template_name='dashboard.html' ), name='dashboard'),
-    path('accounts/', include('django.contrib.auth.urls')),
-    path('', include('dashboard.urls', namespace='dashboard')),
+    path('accounts/', include('django.contrib.auth.urls')),  # регистрация, вход, смена/сброс пароля
+    path('', TemplateView.as_view(template_name='dashboard/dashboard.html'), name='dashboard'),  # главная страница
+    path('', include('dashboard.urls', namespace='dashboard')),  # пространство имён для целей, курсов, заметок, дедлайнов
 ]
