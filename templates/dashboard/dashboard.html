@@ -2,13 +2,39 @@
 {% load static %}
 
 {% block content %}
-<div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 70vh;">
-  <h1 class="mb-4">🎓 Cortex — Учебный трекер</h1>
-  <p class="text-muted mb-4">Организуй свои заметки и дедлайны в одном месте</p>
+<div class="d-flex flex-column align-items-center justify-content-center text-center" style="min-height: 70vh;">
+  <h1 class="mb-4">Cortex — твой умный помощник</h1>
+  <p class="lead mb-4">Отслеживайте цели, курсы и навыки в одном месте.</p>
 
-  <div class="d-grid gap-3" style="width: 300px;">
-    <a href="{% url 'dashboard:note_list' %}" class="btn btn-warning btn-lg">Мои заметки</a>
-    <a href="{% url 'dashboard:deadline_list' %}" class="btn btn-danger btn-lg">Мои дедлайны</a>
+  <div class="d-grid gap-3" style="max-width: 400px; width: 100%;">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <a href="{% url 'dashboard:note_list' %}" class="btn btn-warning btn-lg w-100 py-3">
+          <i class="bi bi-journal-text me-2"></i>Мои заметки
+        </a>
+      </div>
+      <div class="col-12 col-md-6">
+        <a href="{% url 'dashboard:deadline_list' %}" class="btn btn-danger btn-lg w-100 py-3">
+          <i class="bi bi-calendar-check me-2"></i>Мои дедлайны
+        </a>
+      </div>
+      <div class="col-12 col-md-6">
+        <a href="{% url 'dashboard:goal_list' %}" class="btn btn-success btn-lg w-100 py-3">
+          <i class="bi bi-bullseye me-2"></i>Мои цели
+        </a>
+      </div>
+      <div class="col-12 col-md-6">
+        {% if user.is_authenticated %}
+          <a href="{% url 'logout' %}" class="btn btn-outline-secondary btn-lg w-100 py-3">
+            <i class="bi bi-box-arrow-right me-2"></i>Выйти
+          </a>
+        {% else %}
+          <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg w-100 py-3">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Вход
+          </a>
+        {% endif %}
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}

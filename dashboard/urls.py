@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 
+app_name = 'dashboard'
+
 urlpatterns = [
     # Цели Юля
     path('goals/', views.goal_list, name='goal_list'),
