@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h2>Мои заметки</h2>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <a href="{% url 'dashboard:note_create' %}" class="btn btn-success">+ Новая заметка</a>
+  <form method="get" class="d-flex">
+    <input type="text" name="q" value="{{ request.GET.q }}" class="form-control me-2" placeholder="Поиск по заголовку или тексту">
+    <button type="submit" class="btn btn-outline-secondary">Найти</button>
+  </form>
+</div>
+
+{% if notes %}
+  {% for note in notes %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">{{ note.title }}</h5>
+        <p class="card-text">{{ note.content|truncatewords:30 }}</p>
+        <small class="text-muted">Создано: {{ note.created_at|date:"d.m.Y H:i" }}</small>
+        <div class="mt-2">
+          <a href="{% url 'dashboard:note_update' note.pk %}" class="btn btn-sm btn-outline-primary">Изменить</a>
+          <a href="{% url 'dashboard:note_delete' note.pk %}" class="btn btn-sm btn-outline-danger">Удалить</a>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+
+  <!-- Пагинация -->
+  {% if is_paginated %}
+    <nav aria-label="Страницы">
+      <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+          <li class="page-item"><a class="page-link" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Первая</a></li>
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Назад</a></li>
+        {% endif %}
+
+        <li class="page-item disabled"><span class="page-link">Стр. {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span></li>
+
+        {% if page_obj.has_next %}
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Вперёд</a></li>
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Последняя</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+
+{% else %}
+  <div class="alert alert-info">
+    У вас пока нет заметок. <a href="{% url 'dashboard:note_create' %}">Создать первую?</a>
+  </div>
+{% endif %}
+{% endblock %}
