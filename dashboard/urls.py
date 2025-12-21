@@ -23,5 +23,5 @@ urlpatterns = [
     path('deadlines/<int:pk>/delete/', views.DeadlineDeleteView.as_view(), name='deadline_delete'),
 
     # для телеграмм бота
-    # path('start-bot/', views.start_telegram_bot, name='start_bot'),
+    path('start-bot/', views.start_telegram_bot, name='start_bot'),
 ]
