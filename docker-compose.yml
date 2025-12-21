@@ -8,5 +8,6 @@ services:
     environment:
       - DEBUG=0
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TZ=Europe/Minsk
     volumes:
       - .:/app
