@@ -44,3 +44,10 @@ class Deadline(models.Model):
         verbose_name = "Дедлайн"
         verbose_name_plural = "Дедлайны"
         ordering = ['due_date']
+
+class TelegramProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    telegram_id = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return f"({self.user.username}={self.telegram_id})"
