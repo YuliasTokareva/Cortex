@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Регистрация</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }} <!-- Это автоматически добавит метки и ошибки -->
+        <button type="submit" class="btn btn-success">Зарегистрироваться</button>
+        <a href="{% url 'welcome' %}" class="btn btn-secondary">Назад</a>
+    </form>
+</div>
+{% endblock %}

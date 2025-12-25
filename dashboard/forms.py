@@ -1,6 +1,9 @@
 from django import forms
+from django.contrib.auth.models import User
 from django.utils import timezone
 from .models import Note, Deadline, Goal
+from django import forms
+from django.contrib.auth.models import User
 
 
 class NoteForm(forms.ModelForm):
@@ -47,9 +50,11 @@ class DeadlineForm(forms.ModelForm):
             'completed': 'Отметить как выполнено',
         }
 
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['due_date'].input_formats = ['%Y-%m-%dT%H:%M']
+        for field_name in self.fields:
+            self.fields[field_name].help_text = None
 
     def clean_due_date(self):
         due_date = self.cleaned_data.get('due_date')
@@ -66,3 +71,24 @@ class GoalForm(forms.ModelForm):
             "title": forms.TextInput(attrs={"class": "form-control"}),
             "description": forms.Textarea(attrs={"class": "form-control", "rows": "3"}),
         }
+
+
+class UserRegistrationForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=30, required=True)
+    password1 = forms.CharField(widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Подтвердите пароль', widget=forms.PasswordInput)
+
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+
+    def clean_password2(self):
+        cd = self.cleaned_data
+        if cd['password1'] != cd['password2']:
+            raise forms.ValidationError('Пароли не совпадают.')
+        return cd['password2']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name in self.fields:
+            self.fields[field_name].help_text = None

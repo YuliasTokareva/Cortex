@@ -123,7 +123,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = '/dashboard/'
 
 TELEGRAM_BOT_TOKEN = '8586434591:AAER7fy1mEZ4u_7ciIpm75wkk7tC9o4OcBY'

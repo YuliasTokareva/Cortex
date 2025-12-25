@@ -4,6 +4,8 @@ from . import views
 app_name = 'dashboard'
 
 urlpatterns = [
+    path('register/', views.register, name='register'),
+    path('', views.dashboard_main, name='main'),
     # Цели Юля
     path('goals/', views.goal_list, name='goal_list'),
     path('goals/new/', views.goal_create, name='goal_create'),

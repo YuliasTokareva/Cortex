@@ -9,7 +9,39 @@ from .forms import GoalForm, NoteForm, DeadlineForm
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from .telegram_bot import run_telegram_bot
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from .forms import UserRegistrationForm
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+from django.urls import reverse_lazy
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from django.contrib.auth import login
+from django.shortcuts import render, redirect
 
+
+# dashboard/views.py
+from dashboard.models import UserProfile
+import secrets
+
+def dashboard_main(request):
+    # Гарантируем наличие профиля
+    profile, created = UserProfile.objects.get_or_create(
+        user=request.user,
+        defaults={'binding_code': secrets.token_urlsafe(8)}
+    )
+    return render(request, 'dashboard/main.html')
+
+@login_required
+def dashboard_main(request):
+    return render(request, 'dashboard/main.html')
+
+def dashboard_main(request):
+    return render(request, 'dashboard/main.html', {
+        'userprofile': request.user.userprofile,
+    })
 
 # Цели Юля
 @login_required
@@ -87,7 +119,13 @@ class NoteCreateView(LoginRequiredMixin, CreateView):
     model = Note
     form_class = NoteForm
     template_name = 'dashboard/note_form.html'
-    success_url = reverse_lazy('dashboard:note_list')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard:main')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -126,11 +164,13 @@ class DeadlineCreateView(LoginRequiredMixin, CreateView):
     model = Deadline
     form_class = DeadlineForm
     template_name = 'dashboard/deadline_form.html'
-    success_url = reverse_lazy('dashboard:deadline_list')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard:main')
 
 
 class DeadlineUpdateView(LoginRequiredMixin, UpdateView):
@@ -151,3 +191,44 @@ def start_telegram_bot(request):
     app = run_telegram_bot()
     app.run_polling(drop_pending_updates=True)
     return JsonResponse({"status": "bot started"})
+
+
+
+def register(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            login(request, user)  # Автоматический вход
+            return redirect('dashboard:goal_list')
+    else:
+        form = UserRegistrationForm
+    return render(request, 'registration/register.html', {'form': form})
+
+
+@login_required
+def goal_create(request):
+    if request.method == 'POST':
+        form = GoalForm(request.POST)
+        if form.is_valid():
+            goal = form.save(commit=False)
+            goal.user = request.user
+            goal.save()
+            return redirect('dashboard:main')
+    else:
+        form = GoalForm()
+    return render(request, 'dashboard/goal_form.html', {'form': form})
+
+
+def register(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # автологин после регистрации
+            return redirect('dashboard:main')  # или 'binding_instructions'
+    else:
+        form = UserRegistrationForm()
+    return render(request, 'registration/register.html', {'form': form})

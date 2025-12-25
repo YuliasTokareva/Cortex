@@ -1,0 +1,26 @@
+<!-- templates/dashboard/main.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 70vh;">
+    <h1 class="mb-4"> Cortex — твой умный помощник</h1>
+    <p class="text-muted mb-4"> Отслеживайте свои цели, заметки и дедлайны в одном месте. </p>
+    <!-- Показываем код привязки, если Telegram ещё не привязан -->
+    {% if not user.userprofile.telegram_id %}
+      <div class="alert alert-info">
+        <h4>Привяжите Telegram</h4>
+        <p>Отправьте боту этот код:</p>
+        <div class="alert alert-light">
+          <strong>{{ user.userprofile.binding_code }}</strong>
+        </div>
+        <p>Бот сохранит ваш Telegram ID и включит уведомления.</p>
+      </div>
+    {% endif %}
+    <div class="d-grid gap-3" style="width: 300px;">
+        <a href="{% url 'dashboard:note_list' %}" class="btn btn-warning btn-lg"> заметки</a>
+        <a href="{% url 'dashboard:deadline_list' %}" class="btn btn-danger btn-lg"> дедлайны</a>
+        <a href="{% url 'dashboard:goal_list' %}" class="btn btn-primary btn-lg"> цели</a>
+    </div>
+</div>
+{% endblock %}
+
