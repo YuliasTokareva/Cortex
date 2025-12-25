@@ -1,0 +1,5 @@
+{% if not request.user.userprofile.telegram_id %}
+  <div class="alert alert-info">
+    Привяжите Telegram: отправьте боту код <code>{{ request.user.userprofile.binding_code }}</code>
+  </div>
+{% endif %}

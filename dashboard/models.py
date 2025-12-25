@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+import secrets
 
 
 class Goal(models.Model):
@@ -44,9 +47,25 @@ class Deadline(models.Model):
         verbose_name_plural = "Дедлайны"
         ordering = ['due_date']
 
+
 class TelegramProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     telegram_id = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return f"({self.user.username}={self.telegram_id})"
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    telegram_id = models.BigIntegerField(null=True, blank=True, unique=True)
+    binding_code = models.CharField(max_length=12, unique=True, blank=True, null=True)
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        # Используем get_or_create, чтобы избежать дублей
+        UserProfile.objects.get_or_create(
+            user=instance,
+            defaults={'binding_code': secrets.token_urlsafe(8)}
+        )
